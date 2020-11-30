@@ -6,12 +6,14 @@ from spacy.matcher import Matcher
 import syllapy
 count = syllapy.count('additional')
 import random
-import os
 import re
 import dominate
 from dominate.tags import *
 import pdfkit
 from fpdf import FPDF 
+import os
+
+title = 'Almost A Haiku - NaNoGenMo 2020'
 
 nlp = spacy.load("en_core_web_sm") #loading a language model
 matcher2 = Matcher(nlp.vocab) #https://spacy.io/api/matcher
@@ -51,18 +53,16 @@ matches5 = matcher5(doc)
 
 g_5 = []
 g_7 = []
-title = []
+titles = []
 #first_page = "Almost A Haiku - NaNoGenMo 2020"
-
-print(first_page, file = sourceFile)
 
 # Span = A slice from a Doc object.
 for match_id, start, end in matches2 + matches3 + matches4:
     string_id = nlp.vocab.strings[match_id]  # Get string representation
     span = doc[start:end]  # The matched span
 
-    title.append(span.text)
-    converted_title = [x.upper() for x in title]
+    titles.append(span.text)
+    converted_title = [x.upper() for x in titles]
     
     syl_count = 0
     for token in span: # Token = a word, punctuation symbol, whitespace, etc. 
@@ -114,12 +114,12 @@ pdf.set_font("Times", size = 12)
   
 # open the text file in read mode 
 f = open("demo.txt", "r") 
-title = "Almost A Haiku - NaNoGenMo 2020"
   
 # insert the texts in pdf 
 for x in f: 
     pdf.cell(200, 10, txt = x, ln = 1, align = 'C') 
    
 # save the pdf with name .pdf 
-pdf.output("mygfg.pdf")   
+#pdf.set_title(title)
+pdf.output("Almost A Haiku.pdf")   
 
