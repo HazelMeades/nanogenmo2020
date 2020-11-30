@@ -11,6 +11,7 @@ import re
 import dominate
 from dominate.tags import *
 import pdfkit
+from fpdf import FPDF 
 
 nlp = spacy.load("en_core_web_sm") #loading a language model
 matcher2 = Matcher(nlp.vocab) #https://spacy.io/api/matcher
@@ -51,6 +52,9 @@ matches5 = matcher5(doc)
 g_5 = []
 g_7 = []
 title = []
+#first_page = "Almost A Haiku - NaNoGenMo 2020"
+
+print(first_page, file = sourceFile)
 
 # Span = A slice from a Doc object.
 for match_id, start, end in matches2 + matches3 + matches4:
@@ -85,6 +89,7 @@ def myHaiku():
     full_haiku = haiku_title + first_line + second_line + third_line
     word_count = len(full_haiku.split())
     print(full_haiku, file = sourceFile)
+    
     return word_count
 
 total_words = 0
@@ -92,20 +97,29 @@ total_words = 0
 while (total_words < 50000):
     total_words += myHaiku()
 
-sourceFile.close()    
-print(len(total_words))
+sourceFile.close()
 
-#print("Output saved to variable.")
+#print(len(total_words))
 
-#doc = dominate.document(title='Almost A Haiku')
+# save FPDF() class into a  
+# variable pdf 
+pdf = FPDF() 
+  
+# Add a page 
+pdf.add_page() 
+  
+# set style and size of font  
+# that you want in the pdf 
+pdf.set_font("Times", size = 12) 
+  
+# open the text file in read mode 
+f = open("demo.txt", "r") 
+title = "Almost A Haiku - NaNoGenMo 2020"
+  
+# insert the texts in pdf 
+for x in f: 
+    pdf.cell(200, 10, txt = x, ln = 1, align = 'C') 
+   
+# save the pdf with name .pdf 
+pdf.output("mygfg.pdf")   
 
-#with doc.head:
-    #link(rel='stylesheet', href='index.css')
-    #script(type='text/javascript', src='script.js')
-    
-#with doc:
-    #h1('Warmup Haikus')
-    #h2('NaNoGenMo 2020')
-        
-#pdfkit.from_string(str(doc.render()). 'warmup_poetry.pdf')
-#print(doc)
