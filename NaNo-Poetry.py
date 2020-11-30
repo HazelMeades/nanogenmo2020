@@ -1,7 +1,5 @@
 # Following demo: https://medium.com/better-programming/nlp-with-python-build-a-haiku-machine-in-50-lines-of-code-6c7b6de959e3
 
-#import nltk
-#import markovify
 import spacy
 import string
 from spacy.matcher import Matcher
@@ -10,6 +8,9 @@ count = syllapy.count('additional')
 import random
 import os
 import re
+import dominate
+from dominate.tags import *
+import pdfkit
 
 nlp = spacy.load("en_core_web_sm") #loading a language model
 matcher2 = Matcher(nlp.vocab) #https://spacy.io/api/matcher
@@ -39,7 +40,7 @@ matcher5.add("Title", None, pattern)
 
 # Doc = a container for accessing linguistic annotations. 
 doc = nlp(open("nanowrimo/combined-allfinished-nanos-nofluff.txt").read())
-
+sourceFile=open('demo.txt', 'w')
 
 # Loads patterns?
 matches2 = matcher2(doc)
@@ -83,12 +84,28 @@ def myHaiku():
     
     full_haiku = haiku_title + first_line + second_line + third_line
     word_count = len(full_haiku.split())
-    print(full_haiku)
-    
+    print(full_haiku, file = sourceFile)
     return word_count
 
 total_words = 0
+
 while (total_words < 50000):
     total_words += myHaiku()
 
-print(total_words)
+sourceFile.close()    
+print(len(total_words))
+
+#print("Output saved to variable.")
+
+#doc = dominate.document(title='Almost A Haiku')
+
+#with doc.head:
+    #link(rel='stylesheet', href='index.css')
+    #script(type='text/javascript', src='script.js')
+    
+#with doc:
+    #h1('Warmup Haikus')
+    #h2('NaNoGenMo 2020')
+        
+#pdfkit.from_string(str(doc.render()). 'warmup_poetry.pdf')
+#print(doc)
