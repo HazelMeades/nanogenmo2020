@@ -3,11 +3,13 @@
 #import nltk
 #import markovify
 import spacy
+import string
 from spacy.matcher import Matcher
 import syllapy
 count = syllapy.count('additional')
 import random
 import os
+import re
 
 nlp = spacy.load("en_core_web_sm") #loading a language model
 matcher2 = Matcher(nlp.vocab) #https://spacy.io/api/matcher
@@ -53,40 +55,40 @@ title = []
 for match_id, start, end in matches2 + matches3 + matches4:
     string_id = nlp.vocab.strings[match_id]  # Get string representation
     span = doc[start:end]  # The matched span
-    #print('span is %s' %(span))
+
     title.append(span.text)
     converted_title = [x.upper() for x in title]
-    # Token = a word, punctuation symbol, whitespace, etc. 
+    
     syl_count = 0
-    for token in span:
+    for token in span: # Token = a word, punctuation symbol, whitespace, etc. 
         count += 1
         syl_count += syllapy.count(token.text) 
-        #print('%d: %d %s' %(count, syl_count, token.text))
+        
     if syl_count == 5:
         if span.text not in g_5:
             g_5.append(span.text)
+            
     if syl_count == 7:
         if span.text not in g_7:
             g_7.append(span.text)
-#print('%d tokens %d syllables found' %(count, syl_count))
 
-print("Enter for a new haiku. ^C to quit\n")
-while (True):
+word_count = 0
 
-    #with open("nanowrimo/combined-allfinished-nanos-nofluff.txt") as word_file:
-        #words = word_file.readline().split() #This splits by whitespace, if you used some other delimiter specify the delimiter here as an argument.
-    #random_word = random.choice(words)
-    print("%s\n" %(random.choice(converted_title)))
-    #print("%s\n" %(random_word.capitalize()))
+def myHaiku():
+
+    haiku_title = random.choice(converted_title) + '\n\n'
+    first_line = random.choice(g_5) +  '\n' 
+    second_line = random.choice(g_7) + '\n'
+    third_line = random.choice(g_5) +  '\n\n'
     
-    print("%s\n%s\n%s\n" %(random.choice(g_5),random.choice(g_7),random.choice(g_5)))
-    #print(random.choice(open("nanowrimo/combined-allfinished-nanos-nofluff.txt").readline().split))
-    input("\n")
+    full_haiku = haiku_title + first_line + second_line + third_line
+    word_count = len(full_haiku.split())
+    print(full_haiku)
+    
+    return word_count
 
-#print("Enter for a new haiku. ^C to quit\n")
-#while(True):
-    #print("%s\n" %(random.choice(title.append(span.text))+"\n"+"%s\n%s\n%s" %(random.choice(g_5),random.choice(g_7),random.choice(g_5))+"\n")
+total_words = 0
+while (total_words < 50000):
+    total_words += myHaiku()
 
-#while (True):
-    #print("%s\n%s\n%s" %(random.choice(g_5),random.choice(g_7),random.choice(g_5)))
-    #input("\n")
+print(total_words)
